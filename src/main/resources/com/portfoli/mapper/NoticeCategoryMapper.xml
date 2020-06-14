@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.portfoli.dao.NoticeCategoryDao">
+  <resultMap type="NoticeCategory" id="NoticeCategoryMap">
+    <id column="category_no" property="categoryNumber" /> <!-- 게시글 분류번호-->
+    <result column="name" property="name" /> <!-- 게시글 분류명 -->
+  </resultMap>
+
+  <select id="findAll" resultMap="NoticeCategoryMap" parameterType="NoticeCategory">
+    SELECT 
+      category_no, 
+      name 
+    from pf_notice_category
+    ORDER BY category_no asc
+    <if test="startIndex != null and startIndex gte 0">
+    limit ${startIndex}, ${pageSize}
+    </if>
+  </select>
+
+    <select id="selectListCnt" resultType="int" parameterType="int">
+    SELECT 
+      count(*)
+    from pf_notice_category
+  </select>
+  
+  <select id="findByNo" resultMap="NoticeCategoryMap" parameterType="int">
+    SELECT 
+      category_no, 
+      name 
+    from pf_notice_category
+    WHERE category_no = #{categoryNumber}
+  </select>
+  
+  <insert id="insert" parameterType="NoticeCategory">
+    INSERT INTO pf_notice_category(
+      category_no, 
+      name
+    )VALUES(
+      #{categoryNumber},
+      #{name}
+    );
+  </insert>
+
+  <delete id="delete" parameterType="int">
+    DELETE 
+      FROM pf_notice_category
+    WHERE category_no = #{categoryNumber}
+  </delete>
+
+  <update id="update" parameterType="NoticeCategory">
+     UPDATE pf_notice_category SET
+       name = #{name}
+     WHERE category_no = #{categoryNumber}
+  </update>
+
+</mapper>
+
+
+
+
+
+
+

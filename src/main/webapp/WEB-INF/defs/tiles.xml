@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+       
+<tiles-definitions>
+  
+  <!-- app 템플릿 레이아웃 -->
+  <definition name="app" template="/WEB-INF/tiles/app/template.jsp">
+    <put-attribute name="header" value="/WEB-INF/tiles/app/header.jsp"/>
+    <put-attribute name="menu" value="/WEB-INF/tiles/app/menu.jsp"/>
+    <put-attribute name="footer" value="/WEB-INF/tiles/app/footer.jsp"/>
+  </definition>
+  
+  <definition name="*/*.do" extends="app">
+    <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp"/>
+  </definition>
+  
+  <!-- Tiles 제외 선언부 -->
+  <definition name="main.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/index.jsp"/>
+  </definition>
+  
+  <definition name="auth/loginForm.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/auth/loginForm.jsp"/>
+  </definition>
+  <definition name="auth/findPassword.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/auth/findPassword.jsp"/>
+  </definition>
+  <definition name="member/companyJoin.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/member/companyJoin.jsp"/>
+  </definition>
+  <definition name="member/generalJoin.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/member/generalJoin.jsp"/>
+  </definition>
+
+  <definition name="message/form.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/message/form.jsp"/>
+  </definition>
+  <definition name="message/inboxModal.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/message/inboxModal.jsp"/>
+  </definition>
+  <definition name="report/form.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/report/form.jsp"/>
+  </definition>
+  <definition name="portfolio/detail.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/portfolio/detail.jsp"/>
+  </definition>  
+  <definition name="portfolio/pdf.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/portfolio/pdf.jsp"/>
+  </definition>  
+  <definition name="jobposting/list2.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/jobposting/list2.jsp"/>
+  </definition>
+  <definition name="calendar/eventCreate.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/calendar/eventCreate.jsp"/>
+  </definition>
+  <definition name="calendar/eventEdit.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/calendar/eventEdit.jsp"/>
+  </definition>
+  <definition name="recommendEmployer/listMore.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/recommendEmployer/listMore.jsp"/>
+  </definition>
+  <definition name="jobposting/premium.do" extends="empty">
+    <put-attribute name="body" value ="/WEB-INF/views/jobposting/premium.jsp"/>
+  </definition>
+</tiles-definitions>

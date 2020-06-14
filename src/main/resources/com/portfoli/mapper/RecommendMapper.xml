@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.portfoli.dao.RecommendDao">
+
+	<resultMap type="Recommend" id="RecommendMap">
+		<id column="general_member_no" property="memberNumber" />
+		<result column="name" property="name"/>
+		<result column="career" property="career"/>
+		<result column="education_no"	property="educationNumber" />
+		<result column="category" property="educationName" />
+		<result column="seeking_flag" property="seekingFlag" />
+		
+		<collection property="portfolios" ofType="DatabasePortfolio">
+	    <id column="board_no" property="boardNumber" />
+	    <result column="title" property="title" />
+	    <result column="readable" property="readable" />
+	  </collection>
+
+    <collection property="districts" ofType="District">
+      <id column="district_no" property="districtNumber" />
+      <result column="district_name" property="name" />
+    </collection>
+
+		<collection property="skills"  ofType="Skill">
+      <id column="skill_no" property="skillNumber" />
+      <result column="skill_name" property="name" />
+      <result column="field_no" property="fieldNumber" />
+    </collection>
+		
+	</resultMap>
+	
+	
+	<select id="findAllByFilter" resultMap="RecommendMap" parameterType="map">
+	  select 
+	    pm.name, 
+	    pgm.general_member_no, pgm.seeking_flag, pgm.career, 
+	    pfe.category, 
+	    pp.readable, 
+	    pb.board_no, pb.title, 
+	    ps.skill_no, ps.name as skill_name, 
+	    pd.district_no, pd.name as district_name 
+	  from 
+	    pf_members as pm
+	  join 
+	    pf_general_member as pgm
+	  on
+	    pm.member_no=pgm.general_member_no
+	  join 
+	    pf_general_mem_edu as pgme
+	  on
+	    pgm.general_member_no=pgme.general_member_no
+	  join 
+	    pf_final_education as pfe
+	  on 
+	    pfe.education_no=pgme.education_no
+	  left outer join 
+	    pf_portfolio as pp
+	  on 
+	    pp.general_member_no=pgm.general_member_no
+	  left outer join 
+	    pf_board as pb
+	  on 
+	    pp.board_no=pb.board_no
+	  left outer join 
+	    pf_member_skill as pms
+	  on 
+	    pms.general_member_no=pgm.general_member_no
+	  left outer join
+	    pf_skill as ps
+	  on 
+	    ps.skill_no=pms.skill_no
+	  left outer join
+	    pf_interest_location as pil
+	  on 
+	    pil.general_member_no=pgm.general_member_no
+	  left outer join
+	    pf_district as pd
+	  on 
+	    pd.district_no=pil.location_no 
+	  <where>
+      pp.readable=1 
+      <if test="careerNew == '신입'">
+        and pgm.career=0
+      </if>
+      <if test="careerStart gte 1">
+	      <![CDATA[
+        and pgm.career >= #{careerStart}
+        ]]>  
+      </if>
+      <if test="careerEnd gte 1">
+        <![CDATA[
+        and pgm.career <= #{careerEnd}
+        ]]>
+      </if>
+      <if test="skillList.size != 0">
+        and 
+        <foreach collection="skillList" open="(" close=")" item="item" index="index" separator=" or">
+         ps.name=#{item}
+       </foreach>
+      </if>
+      <if test="districtList.size != 0">
+        and 
+        <foreach collection="districtList" open="(" close=")" item="item" index="index" separator=" or">
+         pd.name=#{item}
+       </foreach>
+      </if>
+    </where>
+    <trim prefix="ORDER BY">
+      <if test="viewOrder == '경력순'">  pgm.career desc </if>
+      <if test="viewOrder == '학력순'">  pfe.education_no desc </if>                       
+    </trim>
+	</select>
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.portfoli.dao.RecommendationDao">
+  <resultMap type="Recommendation" id="RecommendationMap">
+    <id column="board_no" property="number" />
+    <result column="title" property="title" />
+    <result column="content" property="content" />
+    <result column="view_count" property="viewCount" />
+    <result column="registered_date" property="registeredDate" />
+    <result column="count" property="count" />
+    
+    <association property="portfolio" javaType="Portfolio">
+	    <id column="board_no" property="number" /><!-- 게시글번호-->
+	    <result column="title" property="title" /><!-- 제목-->
+	    <result column="content" property="content" /><!-- 내용-->
+	    <result column="view_count" property="viewCount" /><!-- 조회수-->
+	    <result column="registered_date" property="registeredDate" /><!-- 등록일 -->
+	    <result column="recommendation_date" property="recommendationDate" /><!-- 등록일 -->
+	    <result column="mynumber" property="myNumber" /><!-- 추천여부 확인할 사람-->
+	    
+	    <result column="homepage" property="homepage" /><!-- 홈페이지 -->
+	    <result column="thumbnail" property="thumbnail" /><!-- 섬네일 -->
+	    <result column="count" property="recommendedCount" /><!-- 추천수 -->
+	    <result column="readable" property="readable" /><!-- 공개여부 -->
+	    
+	    <association property="member" javaType="GeneralMember">
+	      <id column="member_no" property="number" /><!-- 아이디 -->
+	      <result column="id" property="id" /><!-- 아이디 -->
+	      <result column="name" property="name" /><!-- 이름 -->
+	      <result column="seeking_flag" property="seekingFlag" /><!-- 재직여부 -->
+	      <result column="photo" property="photoFilePath" /><!-- 프로필사진 -->
+	      <result column="membership" property="membership" /><!-- 멤버십 -->
+	      <result column="email" property="email" /><!-- 이메일 -->
+	    </association>
+	    
+	    <association property="rankfield" javaType="Field"><!-- 필드(대분류) -->
+	      <id column="field_no" property="number" /><!-- 필드번호 -->
+	      <result column="field_name" property="name" /><!-- 필드명 -->
+	    </association>
+	    
+	    <association property="rankskill" javaType="Skill"><!-- 스킬(소분류) -->
+	      <id column="skill_no" property="skillNumber" /><!-- 스킬번호 -->
+	      <result column="skill_name" property="name" /><!-- 스킬명 -->
+	    </association>
+
+    </association>
+    
+    <association property="member" javaType="Member">
+    <id column="member_no" property="number" />
+    <result column="id" property="id" />
+    <result column="pwd" property="password" />
+    <result column="name" property="name" />
+    <result column="post_no" property="postNumber" />
+    <result column="basic_address" property="basicAddress" />
+    <result column="detail_address" property="detailAddress" />
+    <result column="email" property="email" />
+    <result column="tel" property="tel" />
+    <result column="create_date" property="createDate" />
+    <result column="sms_yn" property="smsYN" />
+    <result column="email_yn" property="emailYN" />
+    <result column="photo" property="photoFilePath" />
+    <result column="type" property="type" />
+    <result column="userkey" property="userkey" />
+    </association>
+    
+  </resultMap>
+
+
+  <select id="check" resultMap="RecommendationMap">
+    SELECT
+      * 
+    FROM pf_recommendation 
+    WHERE 
+      member_no = #{member.number} 
+    and 
+      board_no = #{number}
+  </select>
+  
+  <insert id="toggleon" parameterType="Recommendation">
+	  INSERT INTO 
+		  pf_recommendation
+		  (board_no, member_no) 
+	  VALUES( 
+		  #{number},
+		  #{member.number})
+  </insert>
+  
+  <insert id="toggleoff" parameterType="Recommendation">
+    DELETE FROM
+      pf_recommendation
+    WHERE
+    board_no = #{number}
+    and
+    member_no = #{member.number}
+  </insert>
+  
+  <select id="rankAll" resultMap="RecommendationMap" parameterType="Recommendation">
+	  SELECT 
+	  	r1.*, 
+	  	b.title, 
+	  	b.content, 
+	  	b.view_count, 
+	  	b.registered_date,
+	    p.board_no,
+      p.readable,
+      p.homepage,
+      p.thumbnail,
+      p.readable,
+      b.board_no,
+      m.member_no,  -- 회원번호  --
+      m.id,  -- id값  --
+      m.name, -- 이름 --
+      m.email, -- 이메일 --
+      g.seeking_flag,  -- 재직여부 --
+      m.photo,  -- 사진경로 --
+      g.membership  -- 멤버십 --
+	  FROM (
+	  			select 
+	  				r.board_no, 
+	  				count(r.member_no) count
+	  			from pf_recommendation r 
+	  			WHERE recommendation_date &gt; str_to_date('${startDate}', '%Y-%m-%d') 
+	  			and recommendation_date &lt; str_to_date('${endDate}', '%Y-%m-%d')
+	  			GROUP BY r.board_no
+	  			) r1 
+	  LEFT OUTER JOIN pf_board b 
+	  ON r1.board_no = b.board_no 
+	  LEFT OUTER JOIN pf_portfolio p 
+	  ON b.board_no = p.board_no 
+	  LEFT OUTER JOIN pf_general_member g 
+	  ON p.general_member_no = g.general_member_no 
+	  LEFT OUTER JOIN pf_members m 
+	  ON m.member_no = g.general_member_no 
+	  WHERE p.board_no > 0
+	  
+	  ORDER BY r1.count desc, 
+	  				 b.view_count desc
+	  limit ${startIndex}, ${pageSize}
+  </select>
+  
+  <select id="rankAllCnt" resultType="int" parameterType="Recommendation">
+	  SELECT 
+	  	count(r1.count)
+	  FROM (
+	  			select 
+	  				r.board_no, 
+	  				count(r.member_no) count
+	  			from pf_recommendation r 
+	  			WHERE recommendation_date &gt; str_to_date('${startDate}', '%Y-%m-%d') 
+	  			and recommendation_date &lt; str_to_date('${endDate}', '%Y-%m-%d')
+	  			GROUP BY r.board_no
+	  			) r1 
+	  LEFT OUTER JOIN pf_portfolio p 
+	  ON r1.board_no = p.board_no 
+	  WHERE p.board_no > 0
+  </select>
+ 
+ 	<select id="rankBySkill" resultMap="RecommendationMap" parameterType="int">
+	 	select 
+		   s.skill_no,
+		   s.name skill_name, 
+		   f.field_no, 
+		   f.name field_name,
+		   ms.*, 
+		   ps.*,
+		   gm.general_member_no,
+		   m.member_no,
+		   m.id,
+	     p.board_no,
+       p.readable,
+       p.homepage,
+       p.thumbnail,
+       p.readable,
+       b.title, 
+	  	 b.content, 
+	  	 b.view_count, 
+	  	 b.registered_date,
+		   count(r.member_no) as count
+		from pf_skill s 
+		LEFT OUTER JOIN pf_field f 
+		ON s.field_no = f.field_no
+		LEFT OUTER JOIN pf_member_skill ms
+		ON s.skill_no = ms.skill_no
+		LEFT OUTER JOIN pf_portfolio_skill ps
+		ON ms.member_skill_no = ps.member_skill_no
+		LEFT OUTER JOIN pf_portfolio p
+		ON ps.board_no = p.board_no
+		LEFT OUTER JOIN pf_board b
+		ON p.board_no = b.board_no
+		LEFT OUTER JOIN pf_general_member gm
+		ON gm.general_member_no = p.general_member_no 
+		LEFT OUTER JOIN pf_members m
+		ON m.member_no = gm.general_member_no
+		LEFT OUTER JOIN pf_recommendation r
+		ON b.board_no = r.board_no
+		WHERE f.name is not null 
+			and ms.member_skill_no is not null 
+			and ps.board_no is not null 
+			and f.field_no = #{fieldNumber}
+		GROUP BY r.board_no	
+		HAVING count > 0
+		ORDER BY count(r.member_no) desc
+		limit 0, 1
+ 	</select>
+ <!-- 
+ 	 -->
+</mapper>
+
+
+

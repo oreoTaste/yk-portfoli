@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.portfoli.dao.PortfolioDao">
+  <resultMap type="Portfolio" id="PortfolioMap">
+    <id column="board_no" property="number" /><!-- 게시글번호-->
+    <result column="title" property="title" /><!-- 제목-->
+    <result column="content" property="content" /><!-- 내용-->
+    <result column="view_count" property="viewCount" /><!-- 조회수-->
+    <result column="registered_date" property="registeredDate" /><!-- 등록일 -->
+    <result column="recommendation_date" property="recommendationDate" /><!-- 등록일 -->
+    <result column="mynumber" property="myNumber" /><!-- 추천여부 확인할 사람-->
+    
+    <result column="homepage" property="homepage" /><!-- 홈페이지 -->
+    <result column="thumbnail" property="thumbnail" /><!-- 섬네일 -->
+    <result column="count" property="recommendedCount" /><!-- 추천수 -->
+    <result column="readable" property="readable" /><!-- 공개여부 -->
+    
+    <association property="member" javaType="GeneralMember">
+      <id column="member_no" property="number" /><!-- 아이디 -->
+      <result column="id" property="id" /><!-- 아이디 -->
+      <result column="name" property="name" /><!-- 이름 -->
+      <result column="seeking_flag" property="seekingFlag" /><!-- 재직여부 -->
+      <result column="photo" property="photoFilePath" /><!-- 프로필사진 -->
+      <result column="membership" property="membership" /><!-- 멤버십 -->
+      <result column="email" property="email" /><!-- 이메일 -->
+    </association>
+  </resultMap>
+  
+  <resultMap type="SearchMap" id="SearchMap">
+    <id column="keyword" property="keyword" /><!-- 게시글번호-->
+    <id column="number" property="number" /><!-- 제목-->
+  </resultMap>
+  
+  <!-- 전체 포트폴리오 리스트 추출 (페이징처리)-->
+  <select id="findAll" resultMap="PortfolioMap" parameterType="Portfolio">
+    SELECT
+      p.board_no,
+      p.readable,
+      count(r.board_no) count,
+      p.homepage,
+      p.thumbnail,
+      p.readable,
+      b.board_no,
+      b.title,
+      b.content,
+      b.view_count,
+      b.registered_date,
+      m.member_no,  -- 회원번호  --
+      m.id,  -- id값  --
+      m.name, -- 이름 --
+      m.email, -- 이메일 --
+      g.seeking_flag,  -- 재직여부 --
+      m.photo,  -- 사진경로 --
+      g.membership  -- 멤버십 --
+    FROM pf_portfolio as p 
+    LEFT OUTER JOIN pf_board as b 
+    ON p.board_no = b.board_no
+    LEFT OUTER JOIN pf_general_member as g
+    ON g.general_member_no = p.general_member_no
+    LEFT OUTER JOIN pf_members as m
+    ON m.member_no = g.general_member_no
+    LEFT OUTER JOIN pf_recommendation r 
+    ON b.board_no = r.board_no
+
+    WHERE p.readable = 1
+
+    GROUP BY p.board_no
+  
+    ORDER BY count desc,
+    b.view_count desc,
+    b.registered_date desc
+    limit #{startIndex}, #{pageSize}
+  </select>
+  
+  <!-- 전체 포트폴리오 추천 리스트 추출 (페이징처리)-->
+  <select id="findAllRecommendedlist" resultMap="PortfolioMap" parameterType="Portfolio">
+    SELECT 
+       r1.board_no, 
+       r1.recommendation_date,
+       count(r2.member_no) count,
+       p.homepage,
+       p.thumbnail,
+       p.readable,
+       b.title,
+       b.content,
+       b.view_count,
+       b.registered_date,
+       m.member_no,  -- 회원번호(작성자)  --
+       m.id,  -- id값  --
+       m.name, -- 이름 --
+       m.email, -- 이메일 --
+       g.seeking_flag,  -- 재직여부 --
+       m.photo,  -- 사진경로 --
+       g.membership -- 멤버십 --
+       
+	   FROM (SELECT
+	           board_no,
+	           member_no,
+	           recommendation_date
+		       FROM pf_recommendation
+		       WHERE member_no = 3
+		       ) r1 
+	   LEFT OUTER JOIN pf_recommendation r2 
+	   ON r1.board_no = r2.board_no 
+	   LEFT OUTER JOIN pf_board b
+	   ON r1.board_no = b.board_no
+	   LEFT OUTER JOIN pf_portfolio p
+	   ON r1.board_no = p.board_no
+	   LEFT OUTER JOIN pf_general_member as g
+	   ON g.general_member_no = p.general_member_no
+	   LEFT OUTER JOIN pf_members as m
+	   ON m.member_no = g.general_member_no
+	
+     WHERE r1.board_no = p.board_no
+	   GROUP BY r1.board_no
+	  
+     ORDER BY count desc,
+     b.view_count desc,
+     b.registered_date desc
+    limit #{startIndex}, #{pageSize}
+  </select>  
+
+  <!-- 검색된 포트폴리오 추천 리스트 추출 (페이징처리)-->
+  <select id="findSomeRecommendedlist" resultMap="PortfolioMap" parameterType="SearchMap">
+    SELECT 
+       r1.board_no, 
+       r1.recommendation_date,
+       count(r2.member_no) count,
+       p.homepage,
+       p.thumbnail,
+       p.readable,
+       b.title,
+       b.content,
+       b.view_count,
+       b.registered_date,
+       m.member_no,  -- 회원번호(작성자)  --
+       m.id,  -- id값  --
+       m.name, -- 이름 --
+       m.email, -- 이메일 --
+       g.seeking_flag,  -- 재직여부 --
+       m.photo,  -- 사진경로 --
+       g.membership -- 멤버십 --
+       
+     FROM (SELECT * 
+           FROM pf_recommendation 
+           WHERE member_no = #{number}
+           ) r1 
+     LEFT OUTER JOIN pf_recommendation r2 
+     ON r1.board_no = r2.board_no 
+     LEFT OUTER JOIN pf_board b
+     ON r1.board_no = b.board_no
+     LEFT OUTER JOIN pf_portfolio p
+     ON r1.board_no = p.board_no
+     LEFT OUTER JOIN pf_general_member as g
+     ON g.general_member_no = p.general_member_no
+     LEFT OUTER JOIN pf_members as m
+     ON m.member_no = g.general_member_no
+  
+     WHERE r1.board_no = p.board_no
+     AND b.title LIKE '%${keyword}%'
+     GROUP BY r1.board_no
+    
+     ORDER BY count desc,
+     b.view_count desc,
+     b.registered_date desc
+  </select>  
+
+  <!-- 사용자별 포트폴리오 리스트 추출 -->
+  <select id="findByMember" resultMap="PortfolioMap" parameterType="int">
+    SELECT
+      p.board_no,
+      p.readable,
+      count(r.board_no) count,
+      p.homepage,
+      p.thumbnail,
+      p.readable,
+      b.board_no,
+      b.title,
+      b.content,
+      b.view_count,
+      b.registered_date,
+      m.member_no,  -- 회원번호  --
+      m.id,  -- id값  --
+      m.name, -- 이름 --
+      m.email, -- 이메일 --
+      g.seeking_flag,  -- 재직여부 --
+      m.photo,  -- 사진경로 --
+      g.membership  -- 멤버십 --
+    FROM pf_portfolio as p 
+    LEFT OUTER JOIN pf_board as b 
+    ON p.board_no = b.board_no
+    LEFT OUTER JOIN pf_general_member as g
+    ON g.general_member_no = p.general_member_no
+    LEFT OUTER JOIN pf_members as m
+    ON m.member_no = g.general_member_no
+    LEFT OUTER JOIN pf_recommendation r 
+    ON b.board_no = r.board_no
+    
+    WHERE m.member_no = #{member.number}
+    
+    GROUP BY p.board_no
+    limit #{startIndex}, #{pageSize}
+  </select>
+   
+  <select id="selectMyRecommendedListCnt" resultType="int" parameterType="int">
+	  SELECT 
+	    count(*) 
+	  FROM pf_portfolio p 
+	  LEFT OUTER JOIN pf_board b 
+	  ON p.board_no = b.board_no 
+	  LEFT OUTER JOIN pf_recommendation r 
+	  on b.board_no = r.board_no 
+	  
+	  WHERE member_no = #{number}
+  </select>
+   
+  <select id="selectListCnt" resultType="int" parameterType="int">
+    SELECT 
+      count(*)
+    from pf_portfolio
+    WHERE readable = 1
+  </select>
+  
+  <select id="selectMyListCnt" resultType="int" parameterType="int">
+	  SELECT 
+	    count(*) 
+	  from pf_portfolio p 
+	  LEFT OUTER JOIN pf_general_member m 
+	  ON p.general_member_no = m.general_member_no
+	  WHERE p.general_member_no = #{number}
+  </select>
+  
+  <select id="findByNo" resultMap="PortfolioMap" parameterType="int">
+    SELECT
+      p.board_no,
+      count(r.board_no) count,
+      p.homepage,
+      p.thumbnail,
+      p.readable,
+      b.board_no,
+      b.title,
+      b.content,
+      b.view_count,
+      b.registered_date,
+      m.member_no,  -- 회원번호  --
+      m.id,  -- id값  --
+      m.name, -- 이름 --
+      m.email, -- 이메일 --
+      g.seeking_flag,  -- 재직여부 --
+      m.photo,  -- 사진경로 --
+      g.membership  -- 멤버십 --
+    FROM pf_portfolio as p LEFT OUTER JOIN pf_board as b 
+    ON p.board_no = b.board_no
+    LEFT OUTER JOIN pf_general_member as g
+    ON g.general_member_no = p.general_member_no
+    LEFT OUTER JOIN pf_members as m
+    ON m.member_no = g.general_member_no
+    LEFT OUTER JOIN pf_recommendation r 
+    ON b.board_no = r.board_no
+    
+    WHERE p.board_no = #{number}
+    
+    GROUP BY p.board_no
+  </select>
+
+<!-- mylist에서 상단 검색어 기능 -->
+  <select id="search" resultMap="PortfolioMap" parameterType="SearchMap">
+    SELECT
+      p.board_no,
+      p.readable,
+      count(r.board_no) count,
+      p.homepage,
+      p.thumbnail,
+      p.readable,
+      b.board_no,
+      b.title,
+      b.content,
+      b.view_count,
+      b.registered_date,
+      m.member_no,  -- 회원번호  --
+      m.id,  -- id값  --
+      m.name, -- 이름 --
+      m.email, -- 이메일 --
+      g.seeking_flag,  -- 재직여부 --
+      m.photo,  -- 사진경로 --
+      g.membership  -- 멤버십 --
+    FROM pf_portfolio as p 
+    LEFT OUTER JOIN pf_board as b 
+    ON p.board_no = b.board_no
+    LEFT OUTER JOIN pf_general_member as g
+    ON g.general_member_no = p.general_member_no
+    LEFT OUTER JOIN pf_members as m
+    ON m.member_no = g.general_member_no
+    LEFT OUTER JOIN pf_recommendation r 
+    ON b.board_no = r.board_no
+
+    WHERE p.readable = 1
+    AND b.title like '%${keyword}%'
+    <if test="number > 0">
+    AND p.general_member_no = ${number}
+    </if>
+    <if test="number == null || number == 0">
+    AND p.readable = 1
+    </if>
+    
+    GROUP BY p.board_no
+  
+    ORDER BY count desc,
+    b.view_count desc,
+    b.registered_date desc
+    
+    <if test="pageSize > 0">
+    limit #{startIndex}, #{pageSize}
+    </if>
+  </select>
+
+
+  <insert id="insert" parameterType="Portfolio">
+    INSERT INTO pf_portfolio (
+      board_no,
+      general_member_no,
+      homepage,
+      thumbnail,
+      readable
+      )
+    VALUES(
+      #{number},
+      #{member.number},
+      #{homepage},
+      #{thumbnail},
+      #{readable}
+    )
+  </insert>
+  
+  <delete id="delete" parameterType="int">
+    DELETE 
+      FROM pf_portfolio
+    WHERE board_no = #{number}
+  </delete>
+  
+  <update id="update" parameterType="Portfolio">
+     UPDATE pf_portfolio
+     <set>
+     <if test="homepage != null and homepage != ''"> homepage = #{homepage}, </if>
+     <if test="thumbnail != null and thumbnail != ''"> thumbnail = #{thumbnail}, </if>
+     <if test="readable == 1 || readable == 0"> readable = #{readable} </if>
+     </set>
+     WHERE board_no = #{number}
+  </update>
+  
+  <delete id="readableon" parameterType="Portfolio">
+    UPDATE pf_portfolio
+    <set>
+      readable = 1
+    </set>
+    WHERE board_no = #{number}
+  </delete>
+
+  <delete id="readableoff" parameterType="Portfolio">
+    UPDATE pf_portfolio
+    <set>
+      readable = 0
+    </set>
+    WHERE board_no = #{number}
+  </delete>
+
+  <select id="selectMonthListCnt" resultType="int">
+    SELECT 
+      count(*)
+    FROM pf_portfolio as p
+    JOIN pf_board as b 
+    ON p.board_no = b.board_no
+    WHERE DATE_FORMAT(b.registered_date, '%Y-%m') = date_format(curdate(),'%Y-%m')
+  </select>
+  
+  <select id="sumViewCount" resultType="int">
+    SELECT
+      SUM(b.view_count)
+    FROM pf_portfolio as p
+    JOIN pf_board as b 
+    ON p.board_no = b.board_no
+  </select>
+</mapper>
+
+
+
+
+
+
