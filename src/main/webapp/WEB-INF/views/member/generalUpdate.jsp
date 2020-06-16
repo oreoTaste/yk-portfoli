@@ -10,74 +10,13 @@
 <div class="container">
 	<div class="row">
 		<!--------------------------------------- nav bar ----------------------------------------------->
-		<div class="col-lg-3 mb-5 h--600 border-right ml--20 mt--20">
-
-			<!-- CATEGORIES -->
-			<nav class="nav-deep nav-deep-light mb-2">
-
-				<!-- mobile only -->
-				<button class="clearfix btn btn-toggle btn-sm btn-block text-align-left shadow-md border rounded mb-1 d-block d-lg-none" data-target="#nav_responsive" data-toggle-container-class="d-none d-sm-block bg-white shadow-md border animate-fadein rounded p-3">
-					<span class="group-icon px-2 py-2 float-start"> <i class="fi fi-bars-2"></i> <i class="fi fi-close"></i></span> <span class="h5 py-2 m-0 float-start"> My Page </span>
-				</button>
-
-				<!-- desktop only -->
-					<a href="/portfoli/app/member/generalMypage" style="cursor:pointer; text-decoration: none;"><h3 class="h3 pt-3 pb-3 m-0 d-none d-lg-block ml-3 text-dark">My Page</h3></a>
-				<!-- navigation -->
-				<ul id="nav_responsive" class="nav flex-column d-none d-lg-block font-weight-bold ">
-
-					<!-- 내 정보 -->
-					
-					<li class="nav-item font-weight-bold active">
-					<a class="nav-link" href="#"> 
-					<span class="group-icon"><i class="fi fi-arrow-end"></i> <i class="fi fi-arrow-down"></i></span> 
-					<span class="px-2 d-inline-block active font-weight-bold"> 내 정보 </span>
-        	</a>
-					
-							<ul class="nav flex-column px-2 font-weight-bold">
-								<li class="nav-item font-weight-bold active"><a class="nav-link" href="/portfoli/app/member/generalUpdate"> 내 정보 수정하기 </a></li>
-							</ul>
-						</li>
-
-					<!-- 쪽지함 -->
-					<li class="nav-item font-weight-bold">
-					<a class="nav-link" href="#"> 
-					<span class="group-icon"><i class="fi fi-arrow-end"></i><i class="fi fi-arrow-down"></i></span> 
-					<span class="px-2 d-inline-block active font-weight-bold"> 쪽지함 </span>
-					</a>
-
-						<ul class="nav flex-column px-2 font-weight-bold">
-							<li class="nav-item"><a class="nav-link" href="/portfoli/app/message/inbox"> 받은 쪽지함 </a></li>
-							<li class="nav-item"><a class="nav-link" href="/portfoli/app/message/sent"> 보낸 쪽지함 </a></li>
-						</ul>
-						</li>
-						
-							<!-- 일정 -->
-							<li class="nav-item"><a class="nav-link" href="/portfoli/app/calendar/calendar"> <i class="fi fi-arrow-end m-0 fs--12"></i> <span class="px-2 d-inline-block"> 일정 관리 </span></a></li>
-							
-							<!-- 포트폴리오 -->
-							<li class="nav-item font-weight-bold">
-								<a class="nav-link" href="#"> 
-								<span class="group-icon"><i class="fi fi-arrow-end"></i><i class="fi fi-arrow-down"></i></span> 
-								<span class="px-2 d-inline-block active font-weight-bold"> 내 포트폴리오 </span>
-								</a>
-							<ul class="nav flex-column px-2 font-weight-bold">
-								<li class="nav-item"><a class="nav-link" href="/portfoli/app/portfolio/mylist"> 포트폴리오 관리 </a></li>
-								<li class="nav-item"><a class="nav-link" href="/portfoli/app/portfolio/myRecommendedlist"> 내가 찜한 목록 </a></li>
-							</ul>
-							</li>
-
-				</ul>
-
-			</nav>
-			<!-- /CATEGORIES -->
-
-		</div>
+		<jsp:include page="sidebar.jsp"/>
 		<!--------------------------------------------- /nav bar ------------------------------------------------>
 
 		<!-------------------------------------------- contents -------------------------------------------------->
-		<div class="col-lg-8 mt--20">
+		<div class="col-lg-8 mt--20" style="max-width:111%; width:111%">
 			<!-- FORM -->
-			<div class="col-14 col-sm-14 col-md-14 col-lg-11">
+			<div class="col-14 col-sm-14 col-md-14 col-lg-11" style="max-width:111%; width:111%">
 				<ul class="nav nav-tabs">
 					<li class="nav-item"><a class="nav-link nav-link-remember active text-muted" data-toggle="tab" href="#tab_account">계정</a></li>
 
@@ -463,15 +402,15 @@
     </div>
     
     <div class="row">
-      <div class="col-4 col-lg-4">
+      <div class="col-4 col-lg-4" style="max-width:50%;width:50%;flex: 0 0 50%;">
         <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-primary bl-0 br-0 bb-0 bw--2">
           <div id="selectField" class="card-body" style="height:600px">
           </div>
         </div>
       </div>
       
-      <div class="col-8 col-lg-8">
-        <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-primary bl-0 br-0 bb-0 bw--2">
+      <div class="col-8 col-lg-8" style="max-width: 50%;width:50%;flex: 0 0 50%;">
+        <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-primary bl-0 br-0 bb-0 bw--2" style="overflow-y: scroll;overflow-x: hidden;">
           <div id="selectSkill" class="card-body" style="height:600px">
           </div>
         </div>
@@ -520,7 +459,7 @@
   
     <div class="row">
       <div class="col-12 col-lg-12">
-        <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-danger bl-0 br-0 bb-0 bw--2">
+        <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-danger bl-0 br-0 bb-0 bw--2" >
           <div id="dis_available" class="card-body" style="height:150px">
             <button id="dis_apply" style="position:absolute; right:55px; bottom:35px;" type="button" class="btn btn-sm btn-outline-secondary btn-pill"> 저장하기 </button>
           </div>
@@ -529,16 +468,16 @@
     </div>
     
     <div class="row">
-      <div class="col-4 col-lg-4">
+      <div class="col-4 col-lg-4" style="max-width:50%;width:50%;flex: 0 0 50%;">
         <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-danger bl-0 br-0 bb-0 bw--2">
           <div id="dis_selectCity" class="card-body" style="height:600px">
           </div>
         </div>
       </div>
       
-      <div class="col-8 col-lg-8">
+      <div class="col-8 col-lg-8" style="max-width:50%;width:50%;flex: 0 0 50%;">
         <div class="card shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 border-danger bl-0 br-0 bb-0 bw--2">
-          <div id="dis_selectDistrict" class="card-body" style="height:600px">
+          <div id="dis_selectDistrict" class="card-body" style="overflow-x: hidden;overflow-y: scroll;height:600px;">
           </div>
         </div>
       </div>

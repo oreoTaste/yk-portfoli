@@ -8,10 +8,10 @@
   <div class="row">
 
 <!--------------------------------------- nav bar ----------------------------------------------->
-<jsp:include page="sideBar.jsp"></jsp:include>
+<jsp:include page="sidebar.jsp"/>
 <!--------------------------------------------- /nav bar ------------------------------------------------>
 
-  <div class="col-lg-8 mt--20">
+  <div class="col-lg-8 mt--20" style="max-width:111%; width:111%">
       <div id="middle" class="flex-fill">
         <div class="page-title bg-transparent b-0">
           <h1 class="h3 mt-3 mb-3 px-3 font-weight-normal myfont myfont-md">받은 쪽지함</h1>
@@ -19,7 +19,7 @@
       </div>
 
       <!-- inbox list -->
-      <div class="col-12 col-lg-9 col-xl-10 position-relative" style="max-width:100%;">
+      <div class="col-12 col-lg-9 col-xl-10 position-relative" style="max-width:111%; width:111%">
 
         <!-- portlet -->
         <div class="portlet">
