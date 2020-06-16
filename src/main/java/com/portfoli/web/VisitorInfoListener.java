@@ -13,7 +13,7 @@ import com.portfoli.dao.VisitorDao;
 import com.portfoli.domain.Visitor;
 
 @WebListener
-public class VisitCounter implements HttpSessionListener {
+public class VisitorInfoListener implements HttpSessionListener {
   @Override
   public void sessionCreated(HttpSessionEvent arg0) {
     HttpSession session = arg0.getSession();
