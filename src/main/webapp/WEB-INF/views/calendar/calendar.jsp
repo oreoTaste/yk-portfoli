@@ -23,7 +23,7 @@
 }
 </style>
 
-<div class="container-fluid"  id="drawer" ondrop="drop(event)" ondragover="dragover(event)">
+<div class="container"  id="drawer" ondrop="drop(event)" ondragover="dragover(event)">
 
 	<div class="row">
 
@@ -84,7 +84,26 @@
 						<c:if test="${loginUser.type == '1'}">
 						
 							<!-- 일정 -->
-							<li class="nav-item active"><a class="nav-link" href="/portfoli/app/calendar/calendar"> <i class="fi fi-arrow-end m-0 fs--12"></i> <span class="px-2 d-inline-block"> 일정 관리 </span></a></li>
+							<li class="nav-item active">
+							 <a class="nav-link" href="#" 
+							    href="/portfoli/app/calendar/calendar">
+               <i class="fi fi-arrow-end m-0 fs--12"></i>
+               <span class="px-2 d-inline-block"> 일정 관리 </span>
+               </a>
+							
+							<ul>
+					    <div class="portlet col-lg-2 mt--20" 
+					         id="mydiv"
+					         style="position: relative;display: table;width: 100%;margin: 0 0%!important;padding: 3% 3%;max-width: 100%;background-color: white;">
+					      <div class="portlet-header" style="position: relative; padding:0px;">
+					        <h6 class="js-toDoList d-none d-lg-block m--3">< To Do List ><hr></h6>
+					      </div>
+					      <form class="js-toDoForm" style="position:relative;">
+					        <input style="position:relative; height:5rem;" class="form-control form-control-sm" type="text" placeholder="할 일 추가"></input>
+					      </form>
+					    </div>
+							</ul>
+							</li>
 							
 							<!-- 포트폴리오 -->
 							<li class="nav-item font-weight-bold">
@@ -116,20 +135,6 @@
 			<!-- /CATEGORIES -->
 
 		</div>
-
-		<div class="portlet col-lg-2 mt--20" 
-		     id="mydiv" 
-		     draggable="false" 
-		     ondragstart="dragstart(event)" 
-		     style="position: absolute;top: 30%;left: -6%;padding: 10px;">
-			<div class="portlet-header" style="position: relative;">
-				<h6 class="js-toDoList d-none d-lg-block m--3">< To Do List ></h6>
-			</div>
-			<form class="js-toDoForm" style="position:relative;">
-				<input style="position:relative; height:5rem;" class="form-control form-control-sm" type="text" placeholder="할 일 추가"></input>
-			</form>
-		</div>
-
 
 		<div class="portlet col-lg-8 mt--20">
 
@@ -227,6 +232,7 @@ function paintToDo(text) {
     image.src = '/portfoli/resources/assets/images/x.png';
     image.classList.add("bt-img");
     const li = document.createElement("li");
+    $(li).css('display', 'block');
     const delBtn = document.createElement("button");
     const span = document.createElement("span");
     const newId = toDos.length + 1;
