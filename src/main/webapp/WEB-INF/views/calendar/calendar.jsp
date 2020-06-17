@@ -23,7 +23,12 @@
 }
 </style>
 
-<div class="container"  id="drawer" ondrop="drop(event)" ondragover="dragover(event)">
+<div class="container"  
+     id="drawer" 
+     ondrop="drop(event)" 
+     ondragover="dragover(event)"
+     style="max-width: 1300px;"
+     >
 
 	<div class="row">
 
@@ -91,7 +96,7 @@
                <span class="px-2 d-inline-block"> 일정 관리 </span>
                </a>
 							
-							<ul>
+							<ul style="padding-left: 5%;">
 					    <div class="portlet col-lg-2 mt--20" 
 					         id="mydiv"
 					         style="position: relative;display: table;width: 100%;margin: 0 0%!important;padding: 3% 3%;max-width: 100%;background-color: white;">
@@ -232,7 +237,7 @@ function paintToDo(text) {
     image.src = '/portfoli/resources/assets/images/x.png';
     image.classList.add("bt-img");
     const li = document.createElement("li");
-    $(li).css('display', 'block');
+    $(li).css('display', 'block').css('margin-top', '5%');
     const delBtn = document.createElement("button");
     const span = document.createElement("span");
     const newId = toDos.length + 1;

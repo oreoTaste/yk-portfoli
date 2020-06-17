@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#377dff">
 
 <!-- /PAGE TITLE -->
-<div class="container">
+<div class="container" style="max-width: 1300px;">
 	<div class="row">
 		<!--------------------------------------- nav bar ----------------------------------------------->
 		<jsp:include page="sidebar.jsp"/>

@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#377dff">
 
 <!-- /PAGE TITLE -->
-<div class="container-fluid">
+<div class="container" style="max-width: 1300px;">
 	<div class="row">
 
 			<div class="col-lg-3 mb-5 h--600 border-right ml--20 mt--20">

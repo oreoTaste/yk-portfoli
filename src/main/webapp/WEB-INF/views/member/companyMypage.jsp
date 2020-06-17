@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
-<div class="container-fluid">
+<div class="container" style="max-width: 1300px;">
 
 	<div class="row">
 

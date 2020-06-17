@@ -4,7 +4,7 @@
   pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="container-fluid">
+<div class="container" style="max-width: 1300px;">
 
     <div class="row">
 <!--------------------------------------- nav bar ----------------------------------------------->
@@ -13,7 +13,7 @@
 
 <!-------------------------------------------- 컨텐츠부분 -------------------------------------------->
 
-<div class="container" style="width: 70%;overflow-y: scroll;margin-left: 10px;overflow-x: hidden;">
+<div class="container" style="width: 70%;padding: 0;overflow-y: scroll;margin-left: 10px;overflow-x: hidden;margin:0px;">
     <div class="portlet mt--20"  style="width: 100%; box-shadow: 0 0 0 0; display:inline-block">
 
       <div class="portlet-header" style="height:5rem;">
@@ -59,7 +59,9 @@
               <th class="b-0 w--150" style="font-size: large;">순번</th>
               <th class="b-0 w--200" style="font-size: large;">작성자</th>
               <th class="b-0 w--400" style="font-size: large;">제목</th>
+              <%--
               <th class="b-0 w--300" style="font-size: large;">등록일</th>
+               --%>
               <th class="b-0 w--250" style="font-size: large;">공개여부</th>
               <th class="b-0 w--200" style="font-size: large">추천수</th>
               <th class="b-0 w--200" style="font-size: large;">조회수</th>
@@ -102,10 +104,12 @@
               </td>
 <%-------------------------------- 제목 --------------------------------%>
 <%-------------------------------- 등록일 --------------------------------%>
+              <%--
               <td class="my-td my"
                   style="max-width: 20rem;overflow: hidden;text-overflow: ellipsis;">
                   ${item.registeredDate}</td>
               
+               --%>
                 <c:if test="${item.readable eq 1}">
 <%-------------------------------- 등록일 --------------------------------%>
 <%-------------------------------- 공개여부 --------------------------------%>
@@ -114,7 +118,9 @@
                  class=" btn btn-sm btn-outline-secondary active"
                  data-toggle-ajax-url-on="readableon?number=${item.number}"
                  data-toggle-ajax-url-off="readableoff?number=${item.number}"
-                 data-toast-failure-position="">
+                 data-toast-failure-position=""
+                 style="padding: 5% 10%;"
+                 >
                 <span class="group-icon">
                   <i class="fi" style="font-size:medium; width: 50px;">비공개</i><%-- 비공개 --%>
                   <i class="fi" style="font-size:medium; width: 50px;">공개</i><%-- 공개 --%>
@@ -195,7 +201,7 @@
   data-ajax-modal-backdrop="" 
   class="js-ajax-modal">
   <div class="col-12 col-lg-4 mb-4 cursor" 
-       style="max-width:33%; width:33%; max-height:300px;">
+       style="max-width: 50%;flex: 0 0 50%;width: 50%;max-height:300px;">
     <div class="card b-0 shadow-md shadow-lg-hover transition-all-ease-250 transition-hover-top h-100 bg-cover overlay-dark overlay-opacity-4 text-white"
     <c:if test="${item.thumbnail != null}">
            style="background-image: url('../../upload/portfolio/${item.thumbnail}_300x300.jpg'); width:100%;">
