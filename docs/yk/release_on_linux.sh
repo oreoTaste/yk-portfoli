@@ -1,7 +1,7 @@
 #!/bin/bash
 
-TOMCAT_BIN="/home/ubuntu/server/apache-tomcat-9.0.36/bin"
-TOMCAT_HOME="/home/ubuntu/server/apache-tomcat-9.0.36/webapps"
+TOMCAT_BIN="/home/ubuntu/server/apache-tomcat-9.0.37/bin"
+TOMCAT_HOME="/home/ubuntu/server/apache-tomcat-9.0.37/webapps"
 CURRENT=$PWD
 cd $TOMCAT_BIN
 sh shutdown.sh
