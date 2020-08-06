@@ -154,10 +154,10 @@ function checkSchedule() {
 	  console.log('trying socket connection2');
 	  var wsUri2 = "ws://" + window.location.host
 	      + "/portfoli/app/calendar/alert";
-	  if (wsUri2 == "ws://54.180.194.155:9999/portfoli/app/calendar/alert") {
+	  if (wsUri2 == "ws://172.31.46.184:9999/portfoli/app/calendar/alert") {
 	    websocket2 = new WebSocket(wsUri2);
 	  } else {
-	    wsUri2 = "ws://54.180.194.155:8888/portfoli/app/calendar/alert";
+	    wsUri2 = "ws://172.31.46.184:8888/portfoli/app/calendar/alert";
 	    websocket2 = new WebSocket(wsUri2);
 	  }
 	  websocket2.onopen = function(evt2) {
@@ -182,10 +182,10 @@ function sendMessage() {
   console.log('trying socket connection');
   var wsUri = "ws://" + window.location.host
       + "/portfoli/app/message/alert";
-  if (wsUri == "ws://54.180.194.155:9999/portfoli/app/message/alert") {
+  if (wsUri == "ws://172.31.46.184.155:9999/portfoli/app/message/alert") {
     websocket = new WebSocket(wsUri);
   } else {
-    wsUri = "ws://54.180.194.155:8888/portfoli/app/message/alert";
+    wsUri = "ws://172.31.46.184:8888/portfoli/app/message/alert";
     websocket = new WebSocket(wsUri);
   }
   websocket.onopen = function(evt) {
